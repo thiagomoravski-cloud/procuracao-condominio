@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerador de Procuração - Condomínio Edifício Unique Studio</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f9; color: #333; }
+    .container { max-width: 800px; margin: auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    h1, h2 { color: #1a365d; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-weight: bold; margin-bottom: 5px; }
+    input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+    .row { display: flex; gap: 15px; }
+    .col { flex: 1; }
+    button { background-color: #2b6cb0; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; width: 100%; font-weight: bold; }
+    button:hover { background-color: #2c5282; }
+    
+    /* Estilos para o documento gerado */
+    #documento { display: none; background: white; padding: 40px; line-height: 1.6; }
+    @media print {
+      body * { visibility: hidden; }
+      #documento, #documento * { visibility: visible; }
+      #documento { display: block; position: absolute; left: 0; top: 0; width: 100%; padding: 0; }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container no-print">
+  <h1>Gerador de Procuração (AGE Condomínio)</h1>
+  <p><strong>Condomínio pré-configurado:</strong> Condomínio do Edifício Unique Studio</p>
+  
+  <form id="procuracaoForm">
+    <h2>1. Dados do Locador (Outorgante)</h2>
+    <div class="form-group"><label>Nome Completo:</label><input type="text" id="locadorNome" placeholder="Nome do Proprietário/Locador" required></div>
+    <div class="row">
+      <div class="col form-group"><label>CPF/CNPJ:</label><input type="text" id="locadorDoc" placeholder="000.000.000-00" required></div>
+      <div class="col form-group"><label>RG:</label><input type="text" id="locadorRG" placeholder="Número / Órgão Emissor" required></div>
+    </div>
+    <div class="row">
+      <div class="col form-group"><label>Nacionalidade:</label><input type="text" id="locadorNac" value="brasileiro(a)"></div>
+      <div class="col form-group"><label>Estado Civil:</label><input type="text" id="locadorEstCivil" placeholder="Ex: Solteiro(a), Casado(a)"></div>
+      <div class="col form-group"><label>Profissão:</label><input type="text" id="locadorProf" placeholder="Profissão"></div>
+    </div>
+
+    <h2>2. Dados do Locatário (Outorgado)</h2>
+    <div class="form-group"><label>Nome Completo:</label><input type="text" id="locatarioNome" placeholder="Nome do Locatário" required></div>
+    <div class="row">
+      <div class="col form-group"><label>CPF:</label><input type="text" id="locatarioDoc" placeholder="000.000.000-00" required></div>
+      <div class="col form-group"><label>RG:</label><input type="text" id="locatarioRG" placeholder="Número / Órgão Emissor" required></div>
+    </div>
+    <div class="form-group"><label>Unidade / Apto no Condomínio:</label><input type="text" id="imovelApto" placeholder="Ex: Apto 402" required></div>
+
+    <h2>3. Dados da Assembleia (Pré-preenchidos)</h2>
+    <div class="form-group"><label>Nome do Condomínio:</label><input type="text" id="condNome" value="Condomínio do Edifício Unique Studio" required readonly style="background-color: #e9ecef;"></div>
+    <div class="row">
+      <div class="col form-group"><label>CNPJ do Condomínio:</label><input type="text" id="condCNPJ" value="31.376.974/0001-06" required readonly style="background-color: #e9ecef;"></div>
+      <div class="col form-group"><label>Data da AGE:</label><input type="text" id="ageData" value="24/09/2026" required readonly style="background-color: #e9ecef;"></div>
+      <div class="col form-group"><label>Horário da AGE:</label><input type="text" id="ageHora" value="19:00h" required readonly style="background-color: #e9ecef;"></div>
+    </div>
+    <div class="form-group"><label>Endereço do Condomínio:</label><input type="text" id="condEnd" value="Rua Boaventura da Silva, 2368, Fátima, Belém - PA, CEP 66060-147" required readonly style="background-color: #e9ecef;"></div>
+    <div class="row">
+      <div class="col form-group"><label>Cidade/UF da Assinatura:</label><input type="text" id="cidadeUf" value="Belém - PA" required></div>
+    </div>
+
+    <button type="button" onclick="gerarProcuracao()">Gerar Procuração e Imprimir / Salvar PDF</button>
+  </form>
+</div>
+
+<!-- Área onde a procuração final será renderizada -->
+<div id="documento">
+  <h2 style="text-align: center;">PROCURAÇÃO PARTICULAR</h2>
+  
+  <p><strong>OUTORGANTE:</strong> <span id="docLocadorNome"></span>, <span id="docLocadorNac"></span>, <span id="docLocadorEstCivil"></span>, <span id="docLocadorProf"></span>, portador(a) do CPF/CNPJ nº <span id="docLocadorDoc"></span> e RG nº <span id="docLocadorRG"></span>.</p>
+
+  <p><strong>OUTORGADO:</strong> <span id="docLocatarioNome"></span>, portador(a) do CPF nº <span id="docLocatarioDoc"></span> e RG nº <span id="docLocatarioRG"></span>, residente e domiciliado(a) na unidade <span id="docImovelApto"></span> do <span id="docCondNomeRef"></span>, localizado na <span id="docCondEndRef"></span>.</p>
+
+  <p><strong>PODERES E OBJETO:</strong> Pelo presente instrumento, o(a) OUTORGANTE nomeia e constitui o(a) OUTORGADO seu bastante procurador para representá-lo(a) na <strong>Assembleia Geral Extraordinária (AGE)</strong> do <strong><span id="docCondNome"></span></strong>, inscrito no CNPJ sob o nº <span id="docCondCNPJ"></span>, a ser realizada no dia <strong><span id="docAgeData"></span></strong>, às <strong><span id="docAgeHora"></span></strong>.</p>
+
+  <p>O(A) Outorgado(a) terá amplos poderes para assinar a lista de presença, debater, propor e votar sobre todas as matérias constantes da Ordem do Dia da referida assembleia, bem como assinar atas, termos, impugnações e praticar todos os demais atos necessários ao fiel cumprimento deste mandato.</p>
+
+  <p><strong>VALIDADE:</strong> A presente procuração é válida exclusivamente para a Assembleia Geral Extraordinária acima indicada, extinguindo-se os seus efeitos imediatamente após o seu término.</p>
+
+  <br><br>
+  <p style="text-align: center;"><span id="docCidadeUf"></span>, <span id="docDataHoje"></span>.</p>
+  <br><br><br>
+  <p style="text-align: center;">____________________________________________________<br>
+  <strong id="docAssinaturaNome"></strong><br>
+  (Outorgante / Locador)</p>
+</div>
+
+<script>
+function gerarProcuracao() {
+  // Preencher dados no documento
+  document.getElementById('docLocadorNome').innerText = document.getElementById('locadorNome').value;
+  document.getElementById('docLocadorNac').innerText = document.getElementById('locadorNac').value;
+  document.getElementById('docLocadorEstCivil').innerText = document.getElementById('locadorEstCivil').value;
+  document.getElementById('docLocadorProf').innerText = document.getElementById('locadorProf').value;
+  document.getElementById('docLocadorDoc').innerText = document.getElementById('locadorDoc').value;
+  document.getElementById('docLocadorRG').innerText = document.getElementById('locadorRG').value;
+
+  document.getElementById('docLocatarioNome').innerText = document.getElementById('locatarioNome').value;
+  document.getElementById('docLocatarioDoc').innerText = document.getElementById('locatarioDoc').value;
+  document.getElementById('docLocatarioRG').innerText = document.getElementById('locatarioRG').value;
+  document.getElementById('docImovelApto').innerText = document.getElementById('imovelApto').value;
+
+  document.getElementById('docCondNome').innerText = document.getElementById('condNome').value;
+  document.getElementById('docCondNomeRef').innerText = document.getElementById('condNome').value;
+  document.getElementById('docCondCNPJ').innerText = document.getElementById('condCNPJ').value;
+  document.getElementById('docCondEndRef').innerText = document.getElementById('condEnd').value;
+  
+  document.getElementById('docAgeData').innerText = document.getElementById('ageData').value;
+  document.getElementById('docAgeHora').innerText = document.getElementById('ageHora').value;
+
+  document.getElementById('docCidadeUf').innerText = document.getElementById('cidadeUf').value;
+  document.getElementById('docAssinaturaNome').innerText = document.getElementById('locadorNome').value;
+
+  // Data atual formatada
+  const hoje = new Date();
+  const opcoesData = { day: 'numeric', month: 'long', year: 'numeric' };
+  document.getElementById('docDataHoje').innerText = hoje.toLocaleDateString('pt-BR', opcoesData);
+
+  // Exibir e acionar impressão/PDF
+  document.querySelector('.container').style.display = 'none';
+  document.getElementById('documento').style.display = 'block';
+  
+  window.print();
+
+  // Restaurar tela após fechar diálogo de impressão
+  setTimeout(() => {
+    document.querySelector('.container').style.display = 'block';
+    document.getElementById('documento').style.display = 'none';
+  }, 1000);
+}
+</script>
+
+</body>
+</html>
